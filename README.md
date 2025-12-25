@@ -2,19 +2,83 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-This contains everything you need to run your app locally.
+# FrameCut Web Editor
 
-View your app in AI Studio: https://ai.studio/apps/drive/1MugaJveK54iiphqijp1Rw1PmSGOVIRuF
+FrameCut Web is a high-performance, web-based video editor built with React 19 and Vite. It supports advanced features like multi-track timeline editing, dynamic effects (Zoom, Spotlight, Mosaic), and real-time screen recording with a built-in PiP timer.
 
-## Run Locally
+## 🚀 Quick Start
 
-**Prerequisites:**  Node.js
+### Prerequisites
+- [Node.js](https://nodejs.org/) (version 18 or higher recommended)
 
+### Local Development
+1. **Clone and Install**:
+   ```bash
+   npm install
+   ```
+2. **Setup Environment**:
+   Create a `.env.local` file and add your Gemini API key (if using AI features):
+   ```env
+   GEMINI_API_KEY=your_api_key_here
+   ```
+3. **Run Dev Server**:
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:3000`.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🏗 Architecture
+
+The project follows a **Centralized State + Pure Rendering** architecture to ensure timeline precision and performance.
+
+- **State Management**: Centralized in `App.tsx` using React hooks. The state includes assets (Intro, Main, Outro, Audio), timeline clips, subtitles, and effect configurations.
+- **Rendering Engine**: Located in `components/Player.tsx`. It uses a **RequestAnimationFrame loop** to draw directly onto an HTML5 Canvas. This bypasses React's reconciliation lag for smooth frame-accurate previews and effects.
+- **Timeline Engine**: Located in `components/Timeline.tsx`. Focuses on visual representation of clips and drag-and-drop interaction.
+- **Utility Layer**: `utils.ts` handles timecode formatting, waveform extraction (Web Audio API), and media metadata fetching.
+- **Type System**: Heavily typed in `types.ts` to ensure consistency across the editor's complex data structures.
+
+## ✨ Features
+
+- **Video Editing**: 
+  - Manage Intro, Main Video, and Outro assets separately.
+  - Frame-accurate clipping and timeline positioning.
+  - Multi-source support (URL import or Local file upload).
+- **Audio & Waveforms**:
+  - Independent background audio track.
+  - Real-time waveform generation for visual syncing.
+- **Dynamic Effects**:
+  - **Zoom**: Smooth interpolation and cropping.
+  - **Spotlight**: Focus on specific areas with custom gradients.
+  - **Mosaic**: Interactive drawing on the video to blur sensitive content.
+- **Subtitles**: Drag-and-drop subtitle positioning with real-time editing.
+- **Screen Recording**: 
+  - Integrated screen capture.
+  - Floating Picture-in-Picture (PiP) timer for recording feedback.
+  - Auto-generation of spotlight markers during recording.
+- **Export Engine**: Support for canvas-based frame capture and video export (WebM/MP4, subject to CORS).
+
+## 🧪 Testing
+
+The project currently uses manual verification. To fix bugs rapidly, it is recommended to:
+1. Use the **Vitest** (planned) for unit testing timeline math in `App` and `utils`.
+2. Use the **Debug Panel** (toggleable) to inspect real-time `EditorState`.
+
+## 📦 Deployment
+
+This is a static-site-ready Vite application.
+
+### Build
+```bash
+npm run build
+```
+
+### Static Hosting
+The output in the `dist/` directory can be deployed to any static hosting provider:
+- **Vercel/Netlify**: Just connect the repo; it will auto-detect Vite.
+- **GitHub Pages**: Ensure `base` is correctly set in `vite.config.ts`.
+- **AWS S3/CloudFront**: Upload `dist/` contents. Note that media assets must support **CORS** for some features (like Export/Mosaic) to work.
+
