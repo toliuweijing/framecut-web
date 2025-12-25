@@ -63,9 +63,41 @@ The project follows a **Centralized State + Pure Rendering** architecture to ens
 
 ## 🧪 Testing
 
-The project currently uses manual verification. To fix bugs rapidly, it is recommended to:
-1. Use the **Vitest** (planned) for unit testing timeline math in `App` and `utils`.
-2. Use the **Debug Panel** (toggleable) to inspect real-time `EditorState`.
+We use **Playwright** for end-to-end (E2E) testing to ensure the editor's core features work as expected across different browsers.
+
+### Running Tests
+
+1. **Ensure the Dev Server is Running**:
+   In one terminal, run:
+   ```bash
+   npm run dev
+   ```
+2. **Run All Tests**:
+   In another terminal, run:
+   ```bash
+   npx playwright test
+   ```
+3. **Run Specific Tests**:
+   For example, to run the screen recording test:
+   ```bash
+   npx playwright test tests/recording.spec.ts
+   ```
+4. **Debug Tests with UI Mode**:
+   ```bash
+   npx playwright test --ui
+   ```
+
+### Test Coverage
+
+Currently, we have automated coverage for:
+- **Screen Recording Flow**: Verifies starting a recording, waiting for 5 seconds, stopping, and ensuring the video is correctly loaded into the editor ([recording.spec.ts](file:///Users/weijingliunyu/IdeaProjects/framecut-web/tests/recording.spec.ts)).
+
+### Configuration
+
+Tests are configured in [playwright.config.ts](file:///Users/weijingliunyu/IdeaProjects/framecut-web/playwright.config.ts). This configuration includes:
+- **Automatic Media Permissions**: Chromium is configured to use fake media streams and auto-approve screen sharing requests.
+- **Base URL**: Defaults to `http://localhost:3000`.
+- **Parallel Execution**: Tests run in parallel for maximum speed.
 
 ## 📦 Deployment
 
