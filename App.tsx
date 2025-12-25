@@ -33,6 +33,7 @@ const App: React.FC = () => {
     handleZoomScaleChange,
     handleMosaicBrushSizeChange,
     handleClipSpeedChange,
+    handleToggleDebug,
     handleSeek,
     currentTimeRef,
     isPlayingRef
@@ -791,6 +792,10 @@ const App: React.FC = () => {
         e.preventDefault();
         handleRedo();
       }
+
+      if (e.key === 'd' || e.key === 'D') {
+        handleToggleDebug();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -805,7 +810,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen bg-black text-white overflow-hidden font-sans">
-      <DebugPanel state={state} videoTime={videoCtx.time} />
+      {state.showDebug && <DebugPanel state={state} videoTime={videoCtx.time} />}
       <Sidebar
         intro={state.intro}
         mainVideo={state.mainVideo}
@@ -909,6 +914,8 @@ const App: React.FC = () => {
           onZoomScaleChange={handleZoomScaleChange}
           onMosaicBrushSizeChange={handleMosaicBrushSizeChange}
           onClipSpeedChange={handleClipSpeedChange}
+          onToggleDebug={handleToggleDebug}
+          showDebug={state.showDebug}
           onScreenshot={handleScreenshot}
         />
 

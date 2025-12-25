@@ -11,6 +11,45 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({ state, videoTime }) => {
     const framesRef = useRef(0);
     const lastTimeRef = useRef(performance.now());
 
+    // Draggable state
+    const [position, setPosition] = useState({ top: 64, left: 16 });
+    const [isDragging, setIsDragging] = useState(false);
+    const dragStartRef = useRef({ x: 0, y: 0 });
+    const initialPosRef = useRef({ top: 0, left: 0 });
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        setIsDragging(true);
+        dragStartRef.current = { x: e.clientX, y: e.clientY };
+        initialPosRef.current = { top: position.top, left: position.left };
+        e.preventDefault();
+    };
+
+    useEffect(() => {
+        if (!isDragging) return;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            const dx = e.clientX - dragStartRef.current.x;
+            const dy = e.clientY - dragStartRef.current.y;
+            
+            setPosition({
+                top: Math.max(0, initialPosRef.current.top + dy),
+                left: Math.max(0, initialPosRef.current.left + dx)
+            });
+        };
+
+        const handleMouseUp = () => {
+            setIsDragging(false);
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging]);
+
     // Measure render frequency
     useEffect(() => {
         framesRef.current++;
@@ -27,8 +66,24 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({ state, videoTime }) => {
     const isLagging = Math.abs(Number(drift)) > 0.1;
 
     return (
-        <div className="fixed top-4 left-4 z-[9999] bg-black/90 text-green-400 p-4 rounded-md font-mono text-xs border border-green-900 shadow-xl pointer-events-auto opacity-75 hover:opacity-100 transition-opacity">
-            <h3 className="font-bold border-b border-green-800 mb-2 pb-1">Performance Diagnostic</h3>
+        <div 
+            className={`fixed z-[9999] bg-black/90 text-green-400 p-4 rounded-md font-mono text-xs border border-green-900 shadow-xl pointer-events-auto opacity-90 hover:opacity-100 transition-opacity select-none ${isDragging ? 'cursor-grabbing shadow-2xl scale-[1.02]' : ''}`}
+            style={{ 
+                top: `${position.top}px`, 
+                left: `${position.left}px`,
+                transition: isDragging ? 'none' : 'opacity 0.2s, transform 0.2s, scale 0.2s'
+            }}
+        >
+            <div 
+                className="flex items-center justify-between border-b border-green-800 mb-2 pb-1 cursor-grab active:cursor-grabbing"
+                onMouseDown={handleMouseDown}
+            >
+                <h3 className="font-bold flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    Performance Diagnostic
+                </h3>
+                <div className="text-[10px] text-green-800 font-bold ml-4">DRAG</div>
+            </div>
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                 <div className="text-zinc-500">FPS (React):</div>

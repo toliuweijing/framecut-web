@@ -85,6 +85,7 @@ export interface EditorState {
   playbackRate: number;
   zoomLevel: number; // pixels per second
   fileName: string | null;
+  showDebug: boolean;
   
   // Track Data (Absolute Global Time)
   clips: Clip[];        // Video Clips

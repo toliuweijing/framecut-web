@@ -25,6 +25,7 @@ export const useEditor = () => {
         playbackRate: 1,
         zoomLevel: 50,
         fileName: null,
+        showDebug: false,
         clips: [],
         audioClips: [],
         subtitles: [],
@@ -540,6 +541,10 @@ export const useEditor = () => {
         });
     }, [pushHistory, recalculateDuration]);
 
+    const handleToggleDebug = useCallback(() => {
+        setState(prev => ({ ...prev, showDebug: !prev.showDebug }));
+    }, []);
+
     return {
         state,
         setState,
@@ -563,6 +568,7 @@ export const useEditor = () => {
         handleZoomScaleChange,
         handleMosaicBrushSizeChange,
         handleClipSpeedChange,
+        handleToggleDebug,
         handleSeek,
         currentTimeRef,
         isPlayingRef

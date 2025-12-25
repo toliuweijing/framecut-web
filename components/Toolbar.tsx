@@ -12,7 +12,8 @@ import {
   Brush,
   Gauge,
   FileAudio,
-  Camera
+  Camera,
+  Activity
 } from 'lucide-react';
 import { Selection } from '../types';
 
@@ -34,6 +35,8 @@ interface ToolbarProps {
   onZoomScaleChange: (scale: number) => void;
   onMosaicBrushSizeChange: (size: number) => void;
   onClipSpeedChange: (speed: number) => void;
+  onToggleDebug: () => void;
+  showDebug: boolean;
   onScreenshot?: () => void;
   currentTime: string;
 }
@@ -56,6 +59,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onZoomScaleChange,
   onMosaicBrushSizeChange,
   onClipSpeedChange,
+  onToggleDebug,
+  showDebug,
   onScreenshot,
   currentTime
 }) => {
@@ -264,6 +269,17 @@ const Toolbar: React.FC<ToolbarProps> = ({
             className="p-1.5 hover:bg-zinc-800 rounded-md text-zinc-400 hover:text-white transition-colors"
           >
             <ZoomIn size={16} />
+          </button>
+        </div>
+
+        {/* Debug Toggle */}
+        <div className="flex items-center pl-2 border-l border-zinc-800">
+          <button 
+            onClick={onToggleDebug}
+            className={`p-1.5 rounded-md transition-colors ${showDebug ? 'bg-green-900/30 text-green-400' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'}`}
+            title="Toggle Performance Debug (D)"
+          >
+            <Activity size={16} />
           </button>
         </div>
       </div>
