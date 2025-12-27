@@ -1,5 +1,5 @@
 {
-  "name": "weijing-4-FrameCut Web Editor",
+  "name": "dev-1-FrameCut Web Editor",
   "description": "A professional-grade, frame-by-frame video editor component with timeline visualization and precise controls.",
   "requestFramePermissions": [
     "display-capture",

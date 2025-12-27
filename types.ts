@@ -1,4 +1,5 @@
 
+import React from 'react';
 
 export interface Clip {
   id: string;
@@ -26,6 +27,8 @@ export interface Subtitle {
   end: number;   // Timeline end
   x?: number;    // Horizontal position percentage (0-100)
   y?: number;    // Vertical position percentage (0-100)
+  scale?: number;    // Multiplier (default 1)
+  rotation?: number; // Degrees (default 0)
 }
 
 export interface ZoomEffect {
@@ -48,6 +51,8 @@ export interface SpotlightEffect {
   y: number;
   width: number;
   height: number;
+  intensity?: number;
+  shape?: 'circle' | 'rectangle';
 }
 
 export interface MosaicPath {
@@ -80,7 +85,7 @@ export interface EditorState {
 
   // Timeline State
   duration: number; // Total timeline duration
-  currentTime: number; // Global playhead position
+  currentTime: number; // Global playhead position (Low frequency sync)
   isPlaying: boolean;
   playbackRate: number;
   zoomLevel: number; // pixels per second
@@ -95,6 +100,25 @@ export interface EditorState {
   spotlightEffects: SpotlightEffect[];
   mosaicEffects: MosaicEffect[];
   selection: Selection;
+
+  // Export Settings
+  coverImage: string | null; // Base64 or Blob URL for the video thumbnail/poster
+}
+
+export interface ExtendedEditorState extends EditorState {
+    isExporting: boolean;
+    isExportingAudio: boolean;
+    currentBrushSize: number;
+    exportProgress: number;
+    showSuccessToast: boolean;
+    isAudioTrackMuted: boolean;
+}
+
+export interface PlayerRef {
+  startRecording: (options?: { audioOnly?: boolean; format?: 'mp4' | 'webm' }) => Promise<void>;
+  stopRecording: () => Promise<Blob>;
+  captureFrame: () => string | null;
+  seekTo: (time: number) => Promise<void>;
 }
 
 export interface Dimensions {
